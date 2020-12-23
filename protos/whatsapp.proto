@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+service WhatsApp {
+    // SendWhatsApp is gRPC function to send a WhatSapp mail based on the rest API request
+    rpc SendWhatsApp(WARequest) returns (WAResponse);
+}
+
+// WARequest defines the request for SendWhatsApp call
+message WARequest {
+    // the info that holds the requirement to send WA mail
+    string RemoteJid = 1;
+    // the text body of the WA mail
+    string Text = 2;
+}
+
+// WAResponse is the response from a SendWhatsApp call
+// it contains an error code and an error message if in case 
+// while sending the WA is interrupted
+message WAResponse {
+    // response error code 
+    string ErrorCode = 1;
+    // response error message
+    string ErrorMessage = 2;
+}
