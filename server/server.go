@@ -45,5 +45,8 @@ func (sender *Sender) SendWhatsApp(ctx context.Context, wr *protos.WARequest) (*
 			nil
 	}
 
-	return nil, nil
+	return &protos.WAResponse{
+			ErrorCode:    "200",
+			ErrorMessage: "Status Accepted"},
+		nil
 }
