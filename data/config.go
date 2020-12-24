@@ -132,13 +132,10 @@ func GenerateQR(logger hclog.Logger, qrChan chan string, wac *whatsapp.Conn) ([]
 	// trigger the asynchronous function if the signal interrupt
 	go func() {
 		qr := <-qrChan
+		var err error
 
 		// remove an existing QR code
-		err := os.Remove("./QR/WA_QRCode.png")
-		// if error, exit the application
-		if err != nil {
-			log.Fatal(err)
-		}
+		os.Remove("./QR/WA_QRCode.png")
 
 		//Show qr code or save it somewhere to scan
 		err = qrcode.WriteFile(qr, qrcode.Medium, 256, "./QR/WA_QRCode.png")
