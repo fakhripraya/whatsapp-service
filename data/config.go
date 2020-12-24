@@ -127,6 +127,35 @@ func NewWA(logger hclog.Logger) (*Whatsapp, error) {
 	}, nil
 }
 
+// ConfigInit is a function to initialize app configuration
+func ConfigInit(config *entities.Configuration) error {
+	// determine the application state via env
+	var environment string
+	if os.Getenv("APP_STATE") != "production" && os.Getenv("APP_STATE") != "prod" {
+		environment = "development"
+	} else {
+		environment = "production"
+	}
+
+	viper.SetConfigName("config." + environment)
+	viper.AddConfigPath("./config")
+	viper.AutomaticEnv()
+
+	// Change _ underscore in env to . dot notation in viper
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
+	// Read config
+	if err := viper.ReadInConfig(); err != nil {
+		return err
+	}
+
+	err := viper.Unmarshal(&config)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 // GenerateQR is a function to generate whatsapp session QR
 func GenerateQR(logger hclog.Logger, qrChan chan string, wac *whatsapp.Conn) ([]byte, error) {
 	// trigger the asynchronous function if the signal interrupt

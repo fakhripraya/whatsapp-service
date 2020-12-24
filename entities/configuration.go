@@ -2,7 +2,14 @@ package entities
 
 // Configuration Entity
 type Configuration struct {
-	WA WASession
+	AppConfig AppConfiguration
+	WA        WASession
+}
+
+// AppConfiguration is an entity that stores the app main configuration
+type AppConfiguration struct {
+	Host string
+	Port string
 }
 
 // WASession is an entity that stores a whatsapp session

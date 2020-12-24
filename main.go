@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/fakhripraya/whatsapp-service/data"
+	"github.com/fakhripraya/whatsapp-service/entities"
 	protos "github.com/fakhripraya/whatsapp-service/protos/whatsapp"
 	"github.com/fakhripraya/whatsapp-service/server"
 	"github.com/hashicorp/go-hclog"
@@ -28,6 +29,11 @@ func main() {
 		// log the fatal error if load env failed
 		log.Fatal(err)
 	}
+
+	// Initialize app configuration
+	logger.Info("Initialize application configuration")
+	var appConfig entities.Configuration
+	err = data.ConfigInit(&appConfig)
 
 	// create a whatsapp login / fetch current session
 	logger.Info("Creating a new WhatsApp connection")
@@ -56,7 +62,7 @@ func main() {
 
 	// create a TCP socket for inbound server connections
 	logger.Info("Creating TCP socket")
-	listener, err := net.Listen("tcp", fmt.Sprintf(":%d", 9093))
+	listener, err := net.Listen("tcp", fmt.Sprintf(":"+appConfig.AppConfig.Port))
 	if err != nil {
 		logger.Error("Unable to create listener", "error", err.Error())
 		os.Exit(1)
