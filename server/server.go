@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"strconv"
+	"strings"
 
 	"github.com/Rhymen/go-whatsapp"
 	protos "github.com/fakhripraya/whatsapp-service/protos/whatsapp"
@@ -33,12 +34,11 @@ func (sender *Sender) SendWhatsApp(ctx context.Context, wr *protos.WARequest) (*
 	// create the existance result instance
 	exResult := &data.ExistanceResult{}
 
-	// set the WA target info
-	text := whatsapp.TextMessage{
-		Info: whatsapp.MessageInfo{
-			RemoteJid: wr.RemoteJid,
-		},
-		Text: wr.Text,
+	// filter the WhatsApp number into Indonesian based WhatsApp number
+	if strings.HasPrefix(wr.RemoteJid, "+") {
+		wr.RemoteJid = strings.Replace(wr.RemoteJid, "+", "", 1)
+	} else if strings.HasPrefix(wr.RemoteJid, "0") {
+		wr.RemoteJid = strings.Replace(wr.RemoteJid, "0", "62", 1)
 	}
 
 	// check if WA number whether exist or or not
@@ -65,8 +65,16 @@ func (sender *Sender) SendWhatsApp(ctx context.Context, wr *protos.WARequest) (*
 	if strconv.Itoa(exResult.Status) != "200" {
 		return &protos.WAResponse{
 				ErrorCode:    "400",
-				ErrorMessage: "WA number does not exist"},
+				ErrorMessage: "Nomor WhatsApp tidak dapat ditemukan"},
 			nil
+	}
+
+	// set the WA target info
+	text := whatsapp.TextMessage{
+		Info: whatsapp.MessageInfo{
+			RemoteJid: wr.RemoteJid,
+		},
+		Text: wr.Text,
 	}
 
 	// send the WA text
