@@ -64,7 +64,7 @@ func (sender *Sender) SendWhatsApp(ctx context.Context, wr *protos.WARequest) (*
 	// return bad request if WA number doesn't exist
 	if strconv.Itoa(exResult.Status) != "200" {
 		return &protos.WAResponse{
-				ErrorCode:    "400",
+				ErrorCode:    "404",
 				ErrorMessage: "Nomor WhatsApp tidak dapat ditemukan"},
 			nil
 	}
