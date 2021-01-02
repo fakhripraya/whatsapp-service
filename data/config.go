@@ -158,6 +158,7 @@ func ConfigInit(config *entities.Configuration) error {
 
 // GenerateQR is a function to generate whatsapp session QR
 func GenerateQR(logger hclog.Logger, qrChan chan string, wac *whatsapp.Conn) ([]byte, error) {
+
 	// trigger the asynchronous function if the signal interrupt
 	go func() {
 		qr := <-qrChan

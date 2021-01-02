@@ -46,7 +46,7 @@ func (sender *Sender) SendWhatsApp(ctx context.Context, wr *protos.WARequest) (*
 	if err != nil {
 		return &protos.WAResponse{
 				ErrorCode:    "500",
-				ErrorMessage: err.Error()},
+				ErrorMessage: "Something went wrong, please try to use email instead"},
 			nil
 	}
 
