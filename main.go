@@ -63,8 +63,8 @@ func main() {
 	reflection.Register(gs)
 
 	// create a TCP socket for inbound server connections
-	// start the server
 	go func() {
+
 		logger.Info("Creating TCP socket on " + appConfig.AppConfig.Host + ":" + appConfig.AppConfig.Port)
 		listener, err := net.Listen("tcp", fmt.Sprintf(":"+appConfig.AppConfig.Port))
 		if err != nil {
@@ -72,16 +72,19 @@ func main() {
 			os.Exit(1)
 		}
 
-		// listen for requests
+		// Serve the listener
 		logger.Info("Successfully creating TCP socket")
 		gs.Serve(listener)
+
 	}()
 
+	// Loop function to check the connection status, if not connected then restart the server
 	go func() {
 		for {
 			if waConfig.Wac.GetConnected() == false {
 
 				// gracefully stop all incoming gRPCs request within 30 seconds
+				logger.Info("Gracefully stopping the gRPC server")
 				gs.GracefulStop()
 				time.Sleep(30 * time.Second)
 
@@ -91,7 +94,7 @@ func main() {
 		}
 	}()
 
-	// trap sigterm or interrupt and gracefully shutdown the server
+	// trap sigterm or interrupt
 	channel := make(chan os.Signal, 1)
 	signal.Notify(channel, os.Interrupt)
 	signal.Notify(channel, os.Kill)
@@ -100,9 +103,8 @@ func main() {
 	sig := <-channel
 	logger.Info("Got signal", "info", sig)
 
-	logger.Info("Gracefully stopping the gRPC server")
-
 	// gracefully stop all incoming gRPCs request within 30 seconds
+	logger.Info("Gracefully stopping the gRPC server")
 	gs.GracefulStop()
 	time.Sleep(30 * time.Second)
 
