@@ -65,8 +65,8 @@ func main() {
 	// create a TCP socket for inbound server connections
 	go func() {
 
-		logger.Info("Creating TCP socket on " + appConfig.AppConfig.Host + ":" + appConfig.AppConfig.Port)
-		listener, err := net.Listen("tcp", fmt.Sprintf(":"+appConfig.AppConfig.Port))
+		logger.Info("Creating TCP socket on " + appConfig.WAConfig.Host + ":" + appConfig.WAConfig.Port)
+		listener, err := net.Listen("tcp", fmt.Sprintf(":"+appConfig.WAConfig.Port))
 		if err != nil {
 			logger.Error("Unable to create listener", "error", err.Error())
 			os.Exit(1)

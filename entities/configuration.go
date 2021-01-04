@@ -2,8 +2,8 @@ package entities
 
 // Configuration Entity
 type Configuration struct {
-	AppConfig AppConfiguration
-	WA        WASession
+	WAConfig AppConfiguration
+	WA       WASession
 }
 
 // AppConfiguration is an entity that stores the app main configuration
