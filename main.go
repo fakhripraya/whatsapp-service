@@ -37,6 +37,11 @@ func main() {
 	var appConfig entities.Configuration
 	err = data.ConfigInit(&appConfig)
 
+	if err != nil {
+		// log the fatal error if config init failed
+		log.Fatal(err)
+	}
+
 	// create a whatsapp login / fetch current session
 	logger.Info("Creating a new WhatsApp connection")
 	waConfig, err := data.NewWA(logger)
